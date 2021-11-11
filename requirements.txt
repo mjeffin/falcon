@@ -1,0 +1,4 @@
+falcon==3.0.0
+gunicorn
+requests
+marshmallow==3.4.0

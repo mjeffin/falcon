@@ -6,4 +6,4 @@ The service accepts and processes requests for user sign ups.
 # Status
 API is developed as per specifications and tested with postman. 
 
-Unable to inject request json body using pytest as mentioned falcon documentation. Will a try a different framework after a while
+Unable to inject request json body using pytest as mentioned falcon documentation. Will continue with that after a while

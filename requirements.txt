@@ -1,4 +1,4 @@
-falcon==3.0.0
+falcon==3.0.1
 marshmallow==3.4.0
 gunicorn
 pytest

@@ -1,5 +1,6 @@
 import json
 import falcon
+import sys
 from marshmallow import Schema, fields, ValidationError
 
 
@@ -12,7 +13,7 @@ def password_validator(p):
         raise ValidationError("password must have maximum 50 characters")
     if not any(i.isdigit() for i in p):
         raise ValidationError("password must contain at least 1 number")
-    special_chars = "!#$%&'()*+,/-.:;<=>?@[\]^_`{|}~"
+    special_chars = "!#$%&'()*+,-.:;<=>?@]^_`{|}~"
     if not any(map(lambda x: x in list(special_chars), list(p))):
         raise ValidationError(f"password must contain one of these special characters - {special_chars}")
 
@@ -29,9 +30,18 @@ class UserResource:
     """Falcon User resource model"""
 
     def on_post(self,req, resp):
-        """handler for post request on User resource"""
+        """handler for post request on User resource
+        Unit tests were failing due to issue with the wsgiref dev server created while testing.
+        The try-except block for payload reading is to fix that.
+        Solution obtained from https://github.com/falconry/falcon/pull/748
+        """
+        print(req.content_length)
         if req.content_length:
-            user_dict = json.load(req.stream)
+            try:
+                user_dict = json.load(req.stream)
+            except AssertionError:
+                user_dict = req.stream.read(sys.maxsize) # https://github.com/falconry/falcon/pull/748
+                user_dict = json.loads(user_dict)
         else:
             user_dict = {}
         has_validation_errors = False
